@@ -26,7 +26,7 @@ class Shows{
       language: show['language'],
       genres: show['genres'].cast<String>(),
       premieredOn: convertStringToDate(show['premiered']),
-      imageUrl: show['image']['original'],
+      imageUrl: show['image']['medium'],
       rating: show['rating']['average'].toString(),
     );
   }

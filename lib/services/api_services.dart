@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tv_maze/models/shows.dart';
 
@@ -12,7 +11,7 @@ class ApiService{
   String _nextPageToken = '';
 
   /*
-  The Method search name and return Shows Object
+  This Method search name and return Shows Object
   */
   Future<Shows> searchShows({String showsName}) async{
     Map<String, String> parameters = {
@@ -29,6 +28,9 @@ class ApiService{
       Map<String, dynamic> data = json.decode(response.body)[0]['show'];
       Shows show = Shows.fromMap(data);
       show.displayShowData();
+      return show;
+    }else{
+      return null;
     }
   }
 
