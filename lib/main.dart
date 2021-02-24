@@ -12,8 +12,18 @@ class MyApp extends StatelessWidget {
       title: 'TV Maze',
       theme: ThemeData(
         primarySwatch: Colors.red,
-        iconTheme: IconThemeData(color: Colors.black),
-        appBarTheme: AppBarTheme(color: Colors.white),
+        // brightness: Brightness.dark,
+        // iconTheme: IconThemeData(color: Colors.black),
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black,),
+          textTheme: TextTheme(
+              headline6: TextStyle(
+                  color: Colors.black,
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 24)),
+        ),
       ),
       home: HomeScreen(),
     );
