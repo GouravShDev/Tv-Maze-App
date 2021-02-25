@@ -8,16 +8,16 @@ class ApiService{
   static final ApiService instance = ApiService._instantiate();
 
   final String _baseUrl = 'api.tvmaze.com';
-  String _nextPageToken = '';
+  // String _nextPageToken = '';
 
   /*
-  This Method search name and return Shows Object
+  * This Method search name and return Shows Object
   */
   Future<Shows> searchShows({String showsName}) async{
     Map<String, String> parameters = {
       'q' : showsName,
     };
-    // Example Url : api.tvmaze.com/singlesearch/shows?q=dexter
+    // Example Url : api.tvmaze.com/search/shows?q=dexter
     Uri uri = Uri.https(
       _baseUrl,
       '/search/shows',
@@ -26,6 +26,26 @@ class ApiService{
     var response = await http.get(uri);
     if(response.statusCode == 200){
       Map<String, dynamic> data = json.decode(response.body)[0]['show'];
+      Shows show = Shows.fromMap(data);
+      show.displayShowData();
+      return show;
+    }else{
+      return null;
+    }
+  }
+
+  /*
+  * This Method fetch show by id and return Shows Object
+  */
+  Future<Shows> fetchShow({String id}) async{
+    // Example Url : http://api.tvmaze.com/shows/1231
+    Uri uri = Uri.https(
+      _baseUrl,
+      '/shows/'+ id,
+    );
+    var response = await http.get(uri);
+    if(response.statusCode == 200){
+      Map<String, dynamic> data = json.decode(response.body);
       Shows show = Shows.fromMap(data);
       show.displayShowData();
       return show;

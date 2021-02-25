@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:tv_maze/helper_methods.dart';
 
 class Shows{
   final String id;
@@ -6,6 +7,7 @@ class Shows{
   final String language;
   final List<String> genres;
   final DateTime premieredOn;
+  final String summary;
   final String rating;
   final String imageUrl;
 
@@ -16,6 +18,7 @@ class Shows{
     @required this.genres,
     @required this.language,
     @required this.premieredOn,
+    @required this.summary,
     @required this.rating,
 });
 
@@ -28,6 +31,7 @@ class Shows{
       premieredOn: convertStringToDate(show['premiered']),
       imageUrl: show['image']['medium'],
       rating: show['rating']['average'].toString(),
+      summary: removeHTMLTag(show['summary']),
     );
   }
   void displayShowData(){
@@ -36,11 +40,8 @@ class Shows{
     print("Shows language : $language");
     print("Shows rating : $rating");
     print("Shows premieredOn : ${premieredOn.toString()}");
+    print("Shows summary : $summary");
   }
 
 
-}
-DateTime convertStringToDate(String dateString){
-  // Date in Format yyyy-mm-dd
-  return DateTime.parse(dateString + " 00:00:00.000");
 }

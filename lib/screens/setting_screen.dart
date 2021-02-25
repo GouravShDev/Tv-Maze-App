@@ -13,11 +13,11 @@ class Settings extends StatelessWidget {
           boxShadow:[
             BoxShadow(
               color: Colors.black.withOpacity(0.25),
-              blurRadius: 5.0, // soften the shadow
+              blurRadius: 2.0, // soften the shadow
               // spreadRadius: 5.0, //extend the shadow
               offset: Offset(
-                5.0, // Move to right 10  horizontally
-                5.0, // Move to bottom 10 Vertically
+                4.0, // Move to right 10  horizontally
+                4.0, // Move to bottom 10 Vertically
               ),
             ),
           ],

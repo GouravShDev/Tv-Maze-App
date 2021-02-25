@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:tv_maze/screens/show_details_screen.dart';
 
 class ShowsTile extends StatelessWidget {
   final String id;
@@ -11,8 +13,10 @@ class ShowsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _containerWidth =135.0;
     return Container(
-      // width: 150,
+      // height: 800,
+      width: _containerWidth,
       child: Stack(
         children: [
           ClipRRect(
@@ -21,8 +25,8 @@ class ShowsTile extends StatelessWidget {
             ),
             child: Image.network(
               imageUrl,
-              height: 400,
-              width: 250,
+              // height: 600,
+              width: _containerWidth,
               fit: BoxFit.fitWidth,
             ),
           ),
@@ -37,7 +41,7 @@ class ShowsTile extends StatelessWidget {
           ),
           Positioned(
             bottom: 0,
-            width: 250,
+            width: _containerWidth,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -45,21 +49,22 @@ class ShowsTile extends StatelessWidget {
                     bottomLeft: Radius.circular(8)),
                 color: Colors.black.withOpacity(0.8),
               ),
-              width: 250,
+              width: _containerWidth,
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 4.0,
                 ),
-                child: Text(
-                        showTitle,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                child: AutoSizeText(
+                          showTitle,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          textAlign: TextAlign.justify,
                         ),
-                        textAlign: TextAlign.justify,
-                      ),
                     ),
 
               ),
@@ -70,6 +75,12 @@ class ShowsTile extends StatelessWidget {
               child: InkWell(
               onTap: () {
                 print(id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ShowDetails(id: id,title : showTitle,),
+                  ),
+                );
               },
             ),
           ))

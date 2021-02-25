@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:tv_maze/models/shows.dart';
+
+import '../helper_methods.dart';
 
 class Season{
   final String id;
@@ -25,7 +26,7 @@ class Season{
       id: map['id'],
       name: map['name'],
       episodes: map['episodeOrder'],
-      summary: map['summary'],
+      summary: removeHTMLTag(map['summary']),
       seasonNumber: map['number'],
       imageUrl: map['image']['original'],
       premieredDate: convertStringToDate(map['premiereDate']),

@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /*
-  This method scrap the tvMaze popular shows page
-  and extract ids, titles, imageUrl list
+  * This method scrap the tvMaze popular shows page
+  * and extract ids, titles, imageUrl list
   */
   void _getDataFromWeb() async {
     final response = await http.get("https://www.tvmaze.com/shows");
@@ -161,10 +161,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           : GridView.count(
-              crossAxisSpacing: 8,
+              crossAxisSpacing: 4,
               mainAxisSpacing: 4,
-              padding: EdgeInsets.all(10),
-              crossAxisCount: 2,
+              childAspectRatio: 5/7,
+              padding: EdgeInsets.all(4),
+              crossAxisCount: 3,
               children: List.generate(_titles.length, (index) {
                 return ShowsTile(
                   showTitle: _titles[index],
