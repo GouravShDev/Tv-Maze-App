@@ -13,6 +13,11 @@ String removeHTMLTag(String string){
   return string;
 }
 
+enum CustomTheme{
+  light,
+  dark,
+  black,
+}
 
 /*
 * This method convert String to DateTime format

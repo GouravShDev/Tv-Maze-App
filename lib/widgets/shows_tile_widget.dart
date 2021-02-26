@@ -5,15 +5,14 @@ import 'package:tv_maze/screens/show_details_screen.dart';
 class ShowsTile extends StatelessWidget {
   final String id;
   final String showTitle;
-  // final String imageUrl; TODO: uncomment
-  String imageUrl;
-  String rating;
-
-  ShowsTile({this.showTitle, this.imageUrl, this.id, this.rating});
+  final String imageUrl;
+  final String rating;
+  final MediaQueryData mediaQueryData;
+  ShowsTile({this.showTitle, this.imageUrl, this.id, this.rating,this.mediaQueryData});
 
   @override
   Widget build(BuildContext context) {
-    var _containerWidth =135.0;
+    var _containerWidth = (mediaQueryData.size.width/3) - 5;
     return Container(
       // height: 800,
       width: _containerWidth,

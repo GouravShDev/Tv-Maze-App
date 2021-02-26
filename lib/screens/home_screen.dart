@@ -172,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   imageUrl: _imageUrls[index],
                   id: _ids[index],
                   rating: _ratings[index],
+                  mediaQueryData: MediaQuery.of(context),
                 );
               }),
             ),
