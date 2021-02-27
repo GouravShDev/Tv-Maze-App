@@ -35,6 +35,16 @@ class Settings extends StatelessWidget {
       return Colors.white;
     }
   }
+
+  IconData getIcon(String theme){
+    if (theme == 'light') {
+      return Icons.wb_sunny;
+    } else if (theme == 'dark') {
+      return Icons.nights_stay_outlined;
+    } else {
+      return Icons.nightlight_round;
+    }
+  }
   _buildCustomBox(
       {String themeName, BuildContext ctx, dynamic themeBuilderState}) {
     return InkWell(
@@ -42,29 +52,35 @@ class Settings extends StatelessWidget {
         _changeTheme(context: ctx, themeName: themeName);
       },
       child: Container(
-        decoration: BoxDecoration(
-          color: themeBuilderState.uiColor,
-          border: Border.all(color: getBoxColor(themeName, themeBuilderState), width: 3),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 2.0, // soften the shadow
-              // spreadRadius: 5.0, //extend the shadow
-              offset: Offset(
-                4.0, // Move to right 10  horizontally
-                4.0, // Move to bottom 10 Vertically
-              ),
+            decoration: BoxDecoration(
+              color: themeBuilderState.uiColor,
+              border: Border.all(color: getBoxColor(themeName, themeBuilderState), width: 3),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 2.0, // soften the shadow
+                  // spreadRadius: 5.0, //extend the shadow
+                  offset: Offset(
+                    4.0, // Move to right 10  horizontally
+                    4.0, // Move to bottom 10 Vertically
+                  ),
+                ),
+              ],
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(10),
-        child: Text(
-          themeName,
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Text(
+                  themeName,
+                  style: TextStyle(fontSize: 24),
+                ),
+                SizedBox(width: 8,),
+                Icon(getIcon(themeName)),
+              ],
+            ),
+          ),
     );
   }
 

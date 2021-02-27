@@ -62,6 +62,7 @@ class ShowsTile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.justify,
                         ),
                     ),
