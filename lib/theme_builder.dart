@@ -50,13 +50,13 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
     super.initState();
     // Changing Theme according to value stored in SharePreference
     _getThemeFromSharePref().then((theme) {
-      setState(() {
         if (_currentTheme != theme) {
-          print("REE");
-          _currentTheme = theme;
-          _setThemeColors(_currentTheme);
+          setState(() {
+            _currentTheme = theme;
+            _setThemeColors(_currentTheme);
+          });
         }
-      });
+
     });
   }
 
