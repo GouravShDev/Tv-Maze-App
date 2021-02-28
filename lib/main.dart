@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:tv_maze/helper_methods.dart';
 import 'package:tv_maze/screens/home_screen.dart';
 import 'package:tv_maze/theme_builder.dart';
 
@@ -13,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeBuilder(
-      defaultTheme: CustomTheme.light,
       builder: (context,_brightness,_uiColor,_textColor)
     {
+      print("Material App rebuilt");
       return MaterialApp(
         title: 'TV Maze',
         theme: ThemeData(

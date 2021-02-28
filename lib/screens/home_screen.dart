@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
   ShowsData _showsData;
   int _page = 1;
+
   @override
   void initState() {
     super.initState();
@@ -47,46 +48,47 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
   }
+
   /*
   * This method scrap the tvMaze popular shows page
   * and extract id, title, imageUrl and convert them to
   * Map and return List of those Map
   */
-  Future<List<Map<String,String>>> _getDataFromWeb(int page) async {
+  Future<List<Map<String, String>>> _getDataFromWeb(int page) async {
     List<int> noImageTitleIndex = [];
     final response =
         await http.get("https://www.tvmaze.com/shows?page=" + page.toString());
     dom.Document document = parser.parse(response.body);
     final elements = document.getElementsByClassName("column column-block");
-    List<Map<String,String>> listOfShowData = elements.asMap().map((i,element) {
-      var id = element.attributes['data-key'];
-      var title = element.getElementsByTagName('img')[0].attributes['alt'];
-      // Checking if show doesn't have image
-              // if it doesn't, record it index
-              if(title == 'No image (yet).'){
-                noImageTitleIndex.add(i);
-              }
-      var rating = element
-            .getElementsByClassName('dropdown-action')[0]
-            .getElementsByTagName('span')[0]
-            .innerHtml;
-      // Replacing '-' rating to N/A
-      if (rating == '-') {
-            rating = 'N/A';
+    List<Map<String, String>> listOfShowData = elements
+        .asMap()
+        .map((i, element) {
+          var id = element.attributes['data-key'];
+          var title = element.getElementsByTagName('img')[0].attributes['alt'];
+          // Checking if show doesn't have image
+          // if it doesn't, record it index
+          if (title == 'No image (yet).') {
+            noImageTitleIndex.add(i);
           }
-      // Changing relative url to absolute
-        var imageUrl = element.getElementsByTagName('img')[0].attributes['src'];
-        imageUrl  = "https:" + imageUrl;
+          var rating = element
+              .getElementsByClassName('dropdown-action')[0]
+              .getElementsByTagName('span')[0]
+              .innerHtml;
+          // Changing relative url to absolute
+          var imageUrl =
+              element.getElementsByTagName('img')[0].attributes['src'];
+          imageUrl = "https:" + imageUrl;
 
-        return MapEntry(i, {
-          'id': id,
-          'title': title,
-          'imageUrl': imageUrl,
-          'rating': rating
-        });
-
-    }).values.toList();
-    for(int i = noImageTitleIndex.length-1; i >= 0; i--){
+          return MapEntry(i, {
+            'id': id,
+            'title': title,
+            'imageUrl': imageUrl,
+            'rating': rating
+          });
+        })
+        .values
+        .toList();
+    for (int i = noImageTitleIndex.length - 1; i >= 0; i--) {
       listOfShowData.removeAt(noImageTitleIndex[i]);
     }
     return listOfShowData;
@@ -95,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
   /*
   * This Method load more shows when user reaches at last show in the List
   */
-  _loadMoreShows(int page){
+  _loadMoreShows(int page) {
     _isLoading = true;
     _getDataFromWeb(page).then((value) {
       List<String> ids = [];
@@ -109,12 +111,12 @@ class _HomeScreenState extends State<HomeScreen> {
         imageUrls.add(element['imageUrl']);
       });
       setState(() {
-        _showsData.addData(titles: titles,ratings: ratings,imageUrls: imageUrls,ids: ids);
+        _showsData.addData(
+            titles: titles, ratings: ratings, imageUrls: imageUrls, ids: ids);
       });
       _isLoading = false;
     });
   }
-
 
   _buildDrawer() {
     return Drawer(

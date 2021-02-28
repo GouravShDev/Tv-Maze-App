@@ -26,3 +26,8 @@ DateTime convertStringToDate(String dateString){
   // Date in Format yyyy-mm-dd
   return DateTime.parse(dateString + " 00:00:00.000");
 }
+
+/*
+* Constants to be used throughout the app
+*/
+String baseTheme = 'theme';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper_methods.dart';
 import '../theme_builder.dart';
@@ -11,13 +12,20 @@ class Settings extends StatelessWidget {
   * This method change according to user selection
   */
 
-  _changeTheme({String themeName, BuildContext context}) {
+  _changeTheme({String themeName, BuildContext context}) async {
+    final prefs = await SharedPreferences.getInstance();
     if (themeName == 'light') {
       ThemeBuilder.of(context).changeTheme(CustomTheme.light);
+      // Storing Selection in sharePref
+      await prefs.setInt(baseTheme, 0);
     } else if (themeName == 'dark') {
       ThemeBuilder.of(context).changeTheme(CustomTheme.dark);
+      // Storing Selection in sharePref
+      await prefs.setInt(baseTheme, 1);
     } else {
       ThemeBuilder.of(context).changeTheme(CustomTheme.black);
+      // Storing Selection in sharePref
+      await prefs.setInt(baseTheme, 2);
     }
   }
 
