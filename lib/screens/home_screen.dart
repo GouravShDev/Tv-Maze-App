@@ -25,72 +25,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /*
-  * This method scrap the tvMaze popular shows page
-  * and extract ids, titles, imageUrl list and return Map
-  * containing these List
-  */
-  Future<Map<String, List<String>>> _getDataFromWeb(int page) async {
-    List<int> noImageTitleIndex = [];
-    final response =
-        await http.get("https://www.tvmaze.com/shows?page=" + page.toString());
-    dom.Document document = parser.parse(response.body);
-    final elements = document.getElementsByClassName("column column-block");
-    List<String> ids =
-        elements.map((element) => element.attributes['data-key']).toList();
-    List<String> titles = elements.asMap()
-        .map((i,element) {
-            var title = element.getElementsByTagName('img')[0].attributes['alt'];
-            // Checking if show doesn't have image
-            // if it doesn't, record it index
-            if(title == 'No image (yet).'){
-              noImageTitleIndex.add(i);
-            }
-            return MapEntry(i, title);
-        }).values
-        .toList();
-    List<String> ratings = elements.map((element) {
-      // Replacing '-' rating to N/A
-      var rating = element
-          .getElementsByClassName('dropdown-action')[0]
-          .getElementsByTagName('span')[0]
-          .innerHtml;
-      if (rating == '-') {
-        rating = 'N/A';
-      }
-      return rating;
-    }).toList();
-    List<String> imageUrls = elements.map((element) {
-      // Changing relative url to absolute
-      var relUrl = element.getElementsByTagName('img')[0].attributes['src'];
-      return "https:" + relUrl;
-    }).toList();
-    // Removing shows which doesn't contain image
-    // Loop is traversing in reverse to prevent deleting initial elements
-    for(int i = noImageTitleIndex.length-1; i >= 0; i--){
-      ids.removeAt(noImageTitleIndex[i]);
-      titles.removeAt(noImageTitleIndex[i]);
-      ratings.removeAt(noImageTitleIndex[i]);
-      imageUrls.removeAt(noImageTitleIndex[i]);
-    }
-    return {
-      'ids': ids,
-      'titles': titles,
-      'imageUrls': imageUrls,
-      'ratings': ratings
-    };
-  }
-
-  /*
   * This method initialize _showData with data from web
   */
+
   _initShows() {
-    Map<String, List<String>> data;
-    _getDataFromWeb(_page++).then((value) {
-      data = value;
-      var ids = data['ids'];
-      var imageUrls = data['imageUrls'];
-      var ratings = data['ratings'];
-      var titles = data['titles'];
+    _getDataFromWeb(_page++).then((data) {
+      List<String> ids = [];
+      List<String> imageUrls = [];
+      List<String> ratings = [];
+      List<String> titles = [];
+      data.forEach((element) {
+        ids.add(element['id']);
+        titles.add(element['title']);
+        ratings.add(element['rating']);
+        imageUrls.add(element['imageUrl']);
+      });
       ShowsData showsData = ShowsData(
           ids: ids, imageUrls: imageUrls, ratings: ratings, titles: titles);
       setState(() {
@@ -98,19 +47,67 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
   }
+  /*
+  * This method scrap the tvMaze popular shows page
+  * and extract id, title, imageUrl and convert them to
+  * Map and return List of those Map
+  */
+  Future<List<Map<String,String>>> _getDataFromWeb(int page) async {
+    List<int> noImageTitleIndex = [];
+    final response =
+        await http.get("https://www.tvmaze.com/shows?page=" + page.toString());
+    dom.Document document = parser.parse(response.body);
+    final elements = document.getElementsByClassName("column column-block");
+    List<Map<String,String>> listOfShowData = elements.asMap().map((i,element) {
+      var id = element.attributes['data-key'];
+      var title = element.getElementsByTagName('img')[0].attributes['alt'];
+      // Checking if show doesn't have image
+              // if it doesn't, record it index
+              if(title == 'No image (yet).'){
+                noImageTitleIndex.add(i);
+              }
+      var rating = element
+            .getElementsByClassName('dropdown-action')[0]
+            .getElementsByTagName('span')[0]
+            .innerHtml;
+      // Replacing '-' rating to N/A
+      if (rating == '-') {
+            rating = 'N/A';
+          }
+      // Changing relative url to absolute
+        var imageUrl = element.getElementsByTagName('img')[0].attributes['src'];
+        imageUrl  = "https:" + imageUrl;
+
+        return MapEntry(i, {
+          'id': id,
+          'title': title,
+          'imageUrl': imageUrl,
+          'rating': rating
+        });
+
+    }).values.toList();
+    for(int i = noImageTitleIndex.length-1; i >= 0; i--){
+      listOfShowData.removeAt(noImageTitleIndex[i]);
+    }
+    return listOfShowData;
+  }
 
   /*
   * This Method load more shows when user reaches at last show in the List
   */
   _loadMoreShows(int page){
     _isLoading = true;
-    Map<String, List<String>> data;
     _getDataFromWeb(page).then((value) {
-      data = value;
-      var ids = data['ids'];
-      var imageUrls = data['imageUrls'];
-      var ratings = data['ratings'];
-      var titles = data['titles'];
+      List<String> ids = [];
+      List<String> titles = [];
+      List<String> ratings = [];
+      List<String> imageUrls = [];
+      value.forEach((element) {
+        ids.add(element['id']);
+        titles.add(element['title']);
+        ratings.add(element['rating']);
+        imageUrls.add(element['imageUrl']);
+      });
       setState(() {
         _showsData.addData(titles: titles,ratings: ratings,imageUrls: imageUrls,ids: ids);
       });
