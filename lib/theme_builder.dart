@@ -87,6 +87,15 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
     }
   }
 
+  bool isLightTheme(){
+    return _currentTheme == CustomTheme.light;
+  }
+  bool isDarkTheme(){
+    return _currentTheme == CustomTheme.dark;
+  }
+  bool isBlackTheme(){
+    return _currentTheme == CustomTheme.black;
+  }
   void changeTheme(CustomTheme selectedTheme) {
     setState(() {
       _setThemeColors(selectedTheme);
