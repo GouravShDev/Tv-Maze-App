@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
           brightness: _brightness,
           canvasColor: _uiColor,
+          fontFamily: 'Alegreya',
           appBarTheme: AppBarTheme(
             color: _uiColor,
             elevation: 0,
@@ -31,8 +32,10 @@ class MyApp extends StatelessWidget {
             textTheme: TextTheme(
                 headline6: TextStyle(
                     color: _textColor,
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 24)),
+                    fontFamily: 'AlegreyaSans',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24),
+            ),
           ),
         ),
         home: HomeScreen(),

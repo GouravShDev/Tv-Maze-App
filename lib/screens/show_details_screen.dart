@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tv_maze/models/shows.dart';
 import 'package:tv_maze/services/api_services.dart';
@@ -17,7 +18,8 @@ class ShowDetails extends StatefulWidget {
 
 class _ShowDetailsState extends State<ShowDetails> {
   Shows _show;
-  _initShow() async{
+  Image _showImage;
+  _initShow() async {
     await ApiService.instance.fetchShow(id: widget.id).then((show) {
       setState(() {
         _show = show;
@@ -31,12 +33,25 @@ class _ShowDetailsState extends State<ShowDetails> {
 
     _initShow();
   }
+
+  /*
+  * Make _showImage singleton by initialize it only one time
+  * to prevent downloading image multiple times
+  */
+  Image _getImage(String imageUrl) {
+    if (_showImage == null) {
+      _showImage = Image.network(imageUrl);
+    }
+    return _showImage;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
     return Scaffold(
+      // appBar: AppBar(),
       // Added Center widget as placeholder for the time being
       body: _show == null
           ? Center(
@@ -48,73 +63,119 @@ class _ShowDetailsState extends State<ShowDetails> {
             )
           : Column(
               children: [
-                Container(
-                  // margin: EdgeInsets.all(10),
-                  height: 300,
+                SizedBox(
+                  height: height * 0.38,
                   child: Stack(
-                    fit: StackFit.expand,
                     children: [
-                      Image.network(
-                        _show.imageUrl,
-                        fit: BoxFit.fitWidth,
-                      ),
-                      ClipRRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            color: Colors.grey.withOpacity(0.1),
-                            alignment: Alignment.center,
-                            child: Container(
-                                padding: EdgeInsets.only(
-                                  top: mediaQuery.padding.top * 0.8,
+                      SizedBox(
+                        // margin: EdgeInsets.all(10),
+                        height: height * 0.25,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: _getImage(_show.imageUrl),
+                              ),
+                            ClipRRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  color: Colors.grey.withOpacity(0.1),
                                 ),
-                                child: Image.network(
-                                  _show.imageUrl,
-                                  height: 250,
-                                )),
-                          ),
+                              ),
+                            ),
+
+                            Positioned(
+                              top: mediaQuery.padding.top,
+                              child: Container(
+                                // padding: EdgeInsets.only(left: 8),
+                                decoration: ShapeDecoration(
+                                  color: Theme.of(context).canvasColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(width * .1),
+                                      topRight: Radius.circular(width * .1),
+                                    ),
+                                  ),
+                                ),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back_outlined,
+                                    size: height * 0.03,
+                                    color:
+                                        Theme.of(context).textTheme.headline6.color,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
+                            ),
+                            // Align(
+                            //   alignment: Alignment.bottomCenter,
+                            //   child: Container(
+                            //     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8.0),
+                            //     decoration: BoxDecoration(
+                            //       color: Theme.of(context).canvasColor,
+                            //       border: Border.all(color: Colors.black,width: 1),
+                            //       borderRadius: BorderRadius.circular(8.0)
+                            //     ),
+                            //       child: Text(
+                            //     _show.name,
+                            //     style: TextStyle(fontSize: width * 0.05,fontWeight: FontWeight.bold),
+                            //   )),
+                            // ),
+                          ],
                         ),
                       ),
                       Positioned(
-                          top: mediaQuery.padding.top * 0.8,
-                          left: 0,
-                          child: Container(
-                            decoration: ShapeDecoration(
-                              color: Theme.of(context).canvasColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(width * .1),
-                                      topRight: Radius.circular(width * .1),),),
+                        left: 8.0,
+                        top: (height * 0.22) / 2 ,
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            height: height * 0.25,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                _getImage(_show.imageUrl),
+                                Container(
+
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(_show.genres.toString(),style: TextStyle(fontSize: width * 0.035),),
+                                          Flexible(
+                                            child: SizedBox(
+                                              width: width * 0.5,
+                                              child: AutoSizeText(
+                                                  _show.name,
+                                                  style: Theme.of(context).appBarTheme.textTheme.headline6.copyWith(fontSize: width * 0.05),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ],
                             ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back_outlined,
-                                size: height * 0.035,
-                                color:
-                                    Theme.of(context).textTheme.headline6.color,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          )),
-                      Positioned(bottom: 10, child: Text(_show.name)),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text('Show Info'),
-                        Text('genres : ${_show.genres}'),
-                        Text('language : ${_show.language}'),
-                        Text('Premiered On : ${_show.premieredOn}'),
-                      ],
-                    )
-                  ],
-                ),
-                Text(_show.summary),
+                Text("test"),
+
               ],
             ),
     );
