@@ -31,3 +31,15 @@ DateTime convertStringToDate(String dateString){
 * Constants to be used throughout the app
 */
 String baseTheme = 'theme';
+
+/*
+* This method Extract cast image url from cast
+* data received from api
+*/
+List<String> getListOfImageUrl(List<dynamic> list){
+  List<String> urlList = [];
+  list.forEach((element) {
+    urlList.add(element['person']['image']['medium']);
+  });
+  return urlList;
+}

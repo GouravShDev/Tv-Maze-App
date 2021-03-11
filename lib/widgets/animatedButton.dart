@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../theme_builder.dart';
 
-class ZAnimatedToggle extends StatefulWidget {
+class ZAnimatedButton extends StatefulWidget {
   final List<String> values;
   final ValueChanged onToggleCallback;
 
-  ZAnimatedToggle({
+  ZAnimatedButton({
     Key key,
     @required this.values,
     @required this.onToggleCallback,
   }) : super(key: key);
 
   @override
-  _ZAnimatedToggleState createState() => _ZAnimatedToggleState();
+  _ZAnimatedButtonState createState() => _ZAnimatedButtonState();
 }
 
-class _ZAnimatedToggleState extends State<ZAnimatedToggle> {
+class _ZAnimatedButtonState extends State<ZAnimatedButton> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -39,6 +39,7 @@ class _ZAnimatedToggleState extends State<ZAnimatedToggle> {
                   ),
                 ]),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(
                 widget.values.length,
                 (index) => InkWell(

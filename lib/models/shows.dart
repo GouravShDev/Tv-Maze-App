@@ -10,6 +10,10 @@ class Shows{
   final String summary;
   final String rating;
   final String imageUrl;
+  final String runtime;
+  final String seasonNo;
+  final String episodeNo;
+  final List<String> casts;
 
   Shows({
     @required this.id,
@@ -20,6 +24,10 @@ class Shows{
     @required this.premieredOn,
     @required this.summary,
     @required this.rating,
+    @required this.runtime,
+    @required this.seasonNo,
+    @required this.episodeNo,
+    @required this.casts,
 });
 
   factory Shows.fromMap(Map<String, dynamic> show){
@@ -32,8 +40,13 @@ class Shows{
       imageUrl: show['image']['medium'],
       rating: show['rating']['average'].toString(),
       summary: removeHTMLTag(show['summary']),
+      runtime: show['runtime'].toString(),
+      episodeNo: show['_embedded']['episodes'].length.toString(),
+      seasonNo: show['_embedded']['episodes'][ show['_embedded']['episodes'].length - 1]['season'].toString(),
+      casts: getListOfImageUrl(show['_embedded']['cast']),
     );
   }
+
   void displayShowData(){
     print("Shows name : $name");
     print("Shows imageUrl : $imageUrl");
@@ -41,6 +54,10 @@ class Shows{
     print("Shows rating : $rating");
     print("Shows premieredOn : ${premieredOn.toString()}");
     print("Shows summary : $summary");
+    print("Shows runtime : $runtime");
+    print("Shows season : $seasonNo");
+    print("Shows episode : $episodeNo");
+    // print("cast image url : $casts");
   }
 
 

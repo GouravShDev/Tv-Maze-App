@@ -46,7 +46,7 @@ class ShowsTile extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(8),
                     bottomLeft: Radius.circular(8)),
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withOpacity(0.95),
               ),
               width: _containerWidth,
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),

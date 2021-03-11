@@ -20,7 +20,7 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
   // Initializing Theme as Light by Default
   CustomTheme _currentTheme = CustomTheme.light;
   Brightness brightness = Brightness.light;
-  Color uiColor = Colors.white;
+  Color uiColor = Color.fromRGBO(238,238,238, 1);
   Color textColor = Colors.black;
 
   /*
@@ -68,7 +68,8 @@ class _ThemeBuilderState extends State<ThemeBuilder> {
     switch (theme) {
       case CustomTheme.light:
         brightness = Brightness.light;
-        uiColor = Colors.white;
+        // uiColor = Colors.white;
+        uiColor = Color.fromRGBO(238,238,238, 1);
         textColor = Colors.black;
         _currentTheme = CustomTheme.light;
         break;

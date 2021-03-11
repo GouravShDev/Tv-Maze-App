@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
           brightness: _brightness,
           canvasColor: _uiColor,
-          fontFamily: 'Alegreya',
+          fontFamily: 'Lato',
           appBarTheme: AppBarTheme(
             color: _uiColor,
             elevation: 0,

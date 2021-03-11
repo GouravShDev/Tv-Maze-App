@@ -149,7 +149,7 @@ class Settings extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: _buildThemeIcon(_height,_theme),
           ),
-          ZAnimatedToggle(values: ['light','dark','black'],onToggleCallback: (theme){_changeTheme(themeName: theme,context: context);},),
+          ZAnimatedButton(values: ['light','dark','black'],onToggleCallback: (theme){_changeTheme(themeName: theme,context: context);},),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           //   children: [

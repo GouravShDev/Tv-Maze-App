@@ -222,8 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: GridView.count(
                 crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
-                childAspectRatio: 5 / 7,
+                mainAxisSpacing: 6,
+                childAspectRatio: 6 / 9,
                 padding: EdgeInsets.all(4),
                 crossAxisCount: 3,
                 children: List.generate(_showsData.getLength(), (index) {

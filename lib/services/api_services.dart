@@ -38,11 +38,15 @@ class ApiService{
   * This Method fetch show by id and return Shows Object
   */
   Future<Shows> fetchShow({String id}) async{
-    // Example Url : http://api.tvmaze.com/shows/1231
-    Uri uri = Uri.https(
-      _baseUrl,
-      '/shows/'+ id,
-    );
+    // Example Url : http://api.tvmaze.com/shows/1231?embed[]=episodes&embed[]=cast
+    // Uri uri = Uri.https(
+    //   _baseUrl,
+    //   '/shows/'+ id,
+    //   {'embed[]': 'episodes'},
+    // );
+    // Converting String to URI
+    Uri uri = Uri.parse("https://"+_baseUrl+"/shows/"+id+"?embed[]=episodes&embed[]=cast");
+    print(uri);
     var response = await http.get(uri);
     if(response.statusCode == 200){
       Map<String, dynamic> data = json.decode(response.body);
