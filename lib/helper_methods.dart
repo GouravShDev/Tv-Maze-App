@@ -38,8 +38,11 @@ String baseTheme = 'theme';
 */
 List<String> getListOfImageUrl(List<dynamic> list){
   List<String> urlList = [];
+  print(list);
   list.forEach((element) {
-    urlList.add(element['person']['image']['medium']);
+    if(element['person']['image'] != null){
+      urlList.add(element['person']['image']['medium']);
+    }
   });
   return urlList;
 }

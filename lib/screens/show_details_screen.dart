@@ -19,10 +19,30 @@ class ShowDetails extends StatefulWidget {
 class _ShowDetailsState extends State<ShowDetails> {
   Shows _show;
   Image _showImage;
+  String firstHalfSummary = "";
+  String secondHalfSummary = "";
+
+  bool showFullSummary = false;
   _initShow() async {
     await ApiService.instance.fetchShow(id: widget.id).then((show) {
       setState(() {
         _show = show;
+        // Checking if summary is too long
+        // if it has length more that 200 characters divide into two half
+        // User can choose to read full summary by tapping on "Show more" button
+        if (_show.summary.length > 200) {
+          // find next space in summary String
+          int index = 200;
+          while(_show.summary[index] != " "){
+            index++;
+          }
+          print(index);
+          firstHalfSummary = _show.summary.substring(0, index);
+          secondHalfSummary = _show.summary.substring(index, _show.summary.length);
+        } else {
+          firstHalfSummary = _show.summary;
+          secondHalfSummary = "";
+        }
       });
     });
   }
@@ -317,7 +337,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                             Text(
                               _show.runtime == 'null'
                                   ? '-'
-                                  : _show.runtime + "min",
+                                  : _show.runtime + " min",
                               style: bodyTextStyle,
                             ),
                           ],
@@ -338,8 +358,27 @@ class _ShowDetailsState extends State<ShowDetails> {
                   Padding(
                     padding: const EdgeInsets.only(left: 14, top: 1),
                     child: Text(
-                      _show.summary,
+                      (showFullSummary ? (firstHalfSummary+secondHalfSummary) : (firstHalfSummary +"...")),
                       style: bodyTextStyle,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          child: Text(
+                            showFullSummary ? "show less" : "show more",
+                            style: TextStyle(color: headingTextStyle.color.withOpacity(0.5),),
+                          ),
+                          onTap: (){
+                            setState(() {
+                              showFullSummary = !showFullSummary;
+                            });
+                          },
+                        )
+                      ],
                     ),
                   ),
                   Padding(
@@ -354,9 +393,20 @@ class _ShowDetailsState extends State<ShowDetails> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        SizedBox(
+                        IconButton(
+                          icon: Icon(Icons.chevron_left,size: width * 0.08,),
+                          onPressed: () {
+                            _scrollController.animateTo(
+                              _scrollController.offset - width,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.fastOutSlowIn,
+
+                            );
+                          },
+                        ),
+                        Container(
                           height: height * 0.06,
-                          width: width * 0.85,
+                          width: width * (1 - 0.26),
                           child: ListView.builder(
                               controller: _scrollController,
                               scrollDirection: Axis.horizontal,
@@ -365,8 +415,8 @@ class _ShowDetailsState extends State<ShowDetails> {
                                 return Container(
                                   margin:
                                       const EdgeInsets.only(left: 8, right: 8),
-                                  width: height * 0.06,
-                                  height: height * 0.06,
+                                  width: width * 0.1,
+                                  height: width * 0.1,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.1),
                                     image: DecorationImage(
@@ -388,7 +438,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                               }),
                         ),
                         IconButton(
-                          icon: Icon(Icons.chevron_right),
+                          icon: Icon(Icons.chevron_right,size: width * 0.08,),
                           onPressed: () {
                             _scrollController.animateTo(
                                 _scrollController.offset + width,
