@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
+import 'package:tv_maze/data_search.dart';
 import 'package:tv_maze/models/shows_data.dart';
 
 import 'package:tv_maze/widgets/shows_tile_widget.dart';
@@ -196,6 +197,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(icon: Icon(Icons.search), onPressed: (){
+            showSearch(context: context, delegate: DataSearch());
+          }),
+        ],
         title: Text(
           'TvMaze',
           // style: TextStyle(

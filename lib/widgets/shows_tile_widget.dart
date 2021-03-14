@@ -8,11 +8,17 @@ class ShowsTile extends StatelessWidget {
   final String imageUrl;
   final String rating;
   final MediaQueryData mediaQueryData;
-  ShowsTile({this.showTitle, this.imageUrl, this.id, this.rating,this.mediaQueryData});
+
+  ShowsTile(
+      {this.showTitle,
+      this.imageUrl,
+      this.id,
+      this.rating,
+      this.mediaQueryData});
 
   @override
   Widget build(BuildContext context) {
-    var _containerWidth = (mediaQueryData.size.width/3) - 5;
+    var _containerWidth = (mediaQueryData.size.width / 3) - 5;
     return Container(
       // height: 800,
       width: _containerWidth,
@@ -33,9 +39,15 @@ class ShowsTile extends StatelessWidget {
             right: 0,
             top: 0,
             child: Container(
-              decoration: BoxDecoration(color: Colors.black.withOpacity(0.8),borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8))),
+              decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.8),
+                  borderRadius:
+                      BorderRadius.only(bottomLeft: Radius.circular(8))),
               padding: const EdgeInsets.all(8.0),
-              child: Text(rating,style: TextStyle(color: Colors.white),),
+              child: Text(
+                rating,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
           Positioned(
@@ -55,35 +67,38 @@ class ShowsTile extends StatelessWidget {
                   horizontal: 4.0,
                 ),
                 child: AutoSizeText(
-                          showTitle,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.justify,
-                        ),
-                    ),
-
+                  showTitle,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
               ),
             ),
+          ),
           Positioned.fill(
-              child: Material(
+            child: Material(
               color: Colors.transparent,
               child: InkWell(
-              onTap: () {
-                print(id);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ShowDetails(id: id,title : showTitle,),
-                  ),
-                );
-              },
+                onTap: () {
+                  print(id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ShowDetails(
+                        id: id,
+                        title: showTitle,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ))
+          ),
         ],
       ),
     );

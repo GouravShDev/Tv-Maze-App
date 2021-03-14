@@ -389,9 +389,8 @@ class _ShowDetailsState extends State<ShowDetails> {
                       style: headingTextStyle,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
                           icon: Icon(Icons.chevron_left,size: width * 0.08,),
@@ -406,7 +405,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                         ),
                         Container(
                           height: height * 0.06,
-                          width: width * (1 - 0.26),
+                          width: width * (0.9 - 0.26),
                           child: ListView.builder(
                               controller: _scrollController,
                               scrollDirection: Axis.horizontal,
@@ -450,7 +449,6 @@ class _ShowDetailsState extends State<ShowDetails> {
                         ),
                       ],
                     ),
-                  )
                 ],
               ),
             ),

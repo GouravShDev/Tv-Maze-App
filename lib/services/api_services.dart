@@ -11,9 +11,10 @@ class ApiService{
   // String _nextPageToken = '';
 
   /*
-  * This Method search name and return Shows Object
+  * This Method search name and return List of Shows Object
   */
-  Future<Shows> searchShows({String showsName}) async{
+  Future<List<Shows>> searchShows({String showsName}) async{
+    List<Shows> showList = [];
     Map<String, String> parameters = {
       'q' : showsName,
     };
@@ -25,10 +26,15 @@ class ApiService{
     );
     var response = await http.get(uri);
     if(response.statusCode == 200){
-      Map<String, dynamic> data = json.decode(response.body)[0]['show'];
-      Shows show = Shows.fromMap(data);
-      show.displayShowData();
-      return show;
+      List<dynamic> data = json.decode(response.body);
+      data.forEach((showData) {
+        print(showData);
+        Shows show = Shows.fromMap(showData['show']);
+        showList.add(show);
+        show.displayShowData();
+      });
+
+      return showList;
     }else{
       return null;
     }
