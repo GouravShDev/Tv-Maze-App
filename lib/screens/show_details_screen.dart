@@ -335,8 +335,8 @@ class _ShowDetailsState extends State<ShowDetails> {
                               ],
                             ),
                             Text(
-                              _show.runtime == 'null'
-                                  ? '-'
+                              _show.runtime == 'N/A'
+                                  ? '-' 
                                   : _show.runtime + " min",
                               style: bodyTextStyle,
                             ),
@@ -381,7 +381,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                       ],
                     ),
                   ),
-                  Padding(
+                  if(_show.casts.length > 0) Padding(
                     padding:
                         const EdgeInsets.only(top: 14, left: 10, bottom: 4),
                     child: Text(
@@ -389,7 +389,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                       style: headingTextStyle,
                     ),
                   ),
-                  Row(
+                  if(_show.casts.length > 0) Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
@@ -412,15 +412,14 @@ class _ShowDetailsState extends State<ShowDetails> {
                               itemCount: _show.casts.length,
                               itemBuilder: (context, i) {
                                 return Container(
-                                  margin:
-                                      const EdgeInsets.only(left: 8, right: 8),
                                   width: width * 0.1,
                                   height: width * 0.1,
+                                  margin: const EdgeInsets.only(left: 6.0, right: 6.0,top  : 3.0, bottom : 3.0,),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.1),
                                     image: DecorationImage(
                                       image: NetworkImage(_show.casts[i]),
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitWidth,
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(50.0)),

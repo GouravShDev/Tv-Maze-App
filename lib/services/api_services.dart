@@ -25,13 +25,13 @@ class ApiService{
       parameters,
     );
     var response = await http.get(uri);
+    print("url is : " + uri.toString());
     if(response.statusCode == 200){
       List<dynamic> data = json.decode(response.body);
       data.forEach((showData) {
-        print(showData);
         Shows show = Shows.fromMap(showData['show']);
         showList.add(show);
-        show.displayShowData();
+        // show.displayShowData();
       });
 
       return showList;

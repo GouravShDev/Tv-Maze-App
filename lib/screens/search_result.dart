@@ -70,11 +70,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                   );
                 },
                 child: Card(
-                  color: Theme.of(context)
+                  color: Theme.of(context).brightness == Brightness.dark ? Theme.of(context)
                       .textTheme
                       .bodyText2
                       .color
-                      .withOpacity(0.1),
+                      .withOpacity(0.1) : Colors.white,
                   margin: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
