@@ -7,9 +7,9 @@ import 'package:tv_maze/status_color.dart';
 class LibraryDialog extends StatefulWidget {
 
   final Shows _show;
-  final int activeStatus;
+  final int _activeStatus;
 
-  LibraryDialog(this._show,this.activeStatus);
+  LibraryDialog(this._show,this._activeStatus);
 
   @override
   _LibraryDialogState createState() => _LibraryDialogState();
@@ -108,22 +108,20 @@ class _LibraryDialogState extends State<LibraryDialog> {
   // }
   @override
   void initState() {
-    // TODO: implement initState
     setState(() {
-      _activeSelection = widget.activeStatus;
+      _activeSelection = widget._activeStatus;
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final showsProvider = Provider.of<ShowsList>(context);
-    showsProvider.getStatusFromDatabase(widget._show.id).then((value) => _activeSelection = value);
+    final showsProvider = Provider.of<ShowsList>(context,listen: false);
     final size = MediaQuery.of(context).size;
     final buttonHeight = size.height * 0.06;
     final buttonWidth = size.width * 0.33;
     if(_activeSelection== null){
-      _activeSelection = widget.activeStatus;
+      _activeSelection = widget._activeStatus;
     }
 
     // final buttonTextSize = size.width * 0.03;
@@ -205,8 +203,10 @@ class _LibraryDialogState extends State<LibraryDialog> {
                               size: size.width * 0.08,
                             ),
                             onPressed: (){
-                              if(_activeSelection != widget.activeStatus){
-                                showsProvider.updateDatabase(widget._show,_activeSelection,widget.activeStatus);
+                              print('active selection : $_activeSelection');
+                              print('active status : ${widget._activeStatus}');
+                              if(_activeSelection != widget._activeStatus){
+                                showsProvider.updateDatabase(widget._show,_activeSelection,widget._activeStatus);
                               }
                               Navigator.pop(context);
                             },

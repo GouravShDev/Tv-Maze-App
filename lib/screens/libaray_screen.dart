@@ -1,11 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tv_maze/models/shows.dart';
+import 'package:tv_maze/providers/shows_provider.dart';
 import 'package:tv_maze/utils/database_helper.dart';
 import 'package:tv_maze/widgets/shows_tile_widget.dart';
 
-import '../helper_methods.dart';
-import 'show_details_screen.dart';
+
 
 class LibraryScreen extends StatefulWidget {
   static const routeName = '/library';
@@ -15,40 +15,36 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> {
   DatabaseHelper databaseHelper = DatabaseHelper();
-  List<Shows> _showList;
+  List<Shows> _showList = [];
   int count = 0;
 
-  _getDatabaseList() async {
-    var list = await databaseHelper.getShowList();
-    setState(() {
-      _showList = list;
-    });
-  }
+  // _getDatabaseList() async {
+  //   var list = Provider.of<ShowsList>(context).showsList;
+  //   setState(() {
+  //     _showList = list;
+  //   });
+  // }
 
   @override
   void initState() {
-    // TODO: implement initState
-    _getDatabaseList();
+    // _getDatabaseList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    if (_showList == null) {
-      _showList = List<Shows>();
-    }
+    // final mediaQuery = MediaQuery.of(context);
+    final showProvider = Provider.of<ShowsList>(context);
+    _showList = showProvider.showsList;
     return Scaffold(
       appBar: AppBar(
         title: Text('Library'),
       ),
       body: _showList.length <= 0
           ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor, // Red
-                ),
-              ),
+              child:
+                  Text("Nothing here yet (-_-)",style: TextStyle(fontSize: 22),),
+
             )
           : GridView.count(
         crossAxisSpacing: 4,

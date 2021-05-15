@@ -1,12 +1,11 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tv_maze/models/shows.dart';
-import 'package:tv_maze/providers/shows_provider.dart';
 import 'package:tv_maze/services/api_services.dart';
 import 'package:tv_maze/status_color.dart';
 import 'package:tv_maze/utils/custom_icon_icons.dart';
+import 'package:tv_maze/utils/database_helper.dart';
 import 'package:tv_maze/widgets/library_add_dialog.dart';
 
 class ShowDetails extends StatefulWidget {
@@ -53,7 +52,7 @@ class _ShowDetailsState extends State<ShowDetails> {
           firstHalfSummary = _show.summary;
           secondHalfSummary = "";
         }
-        // Provider.of<ShowsList>(context,listen: false).getStatusFromDatabase(_show.id).then((value) => _showStatus = value);
+        getStatusFromDatabase();
     });
   }
 
@@ -78,6 +77,22 @@ class _ShowDetailsState extends State<ShowDetails> {
   }
 
 
+  getStatusFromDatabase() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    var show = await databaseHelper.getShowById(widget.id);
+
+    if(show == null){
+      setState(() {
+        _showStatus = 0;
+      });
+    }else{
+      if(_showStatus != show.status){
+        setState(() {
+          _showStatus = show.status;
+        });
+      }
+    }
+  }
 
 
   Color _getStatusColor(int status) {
@@ -272,8 +287,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                                                           8.0),side: BorderSide(color: Theme.of(context).textTheme.bodyText2.color.withOpacity(0.3),width: 1),),
                                               // color: Theme.of(context).textTheme.bodyText2.color,
                                               color: Theme.of(context).canvasColor,
-                                              child: Consumer<ShowsList>(
-                                                builder: (context, show, child) =>Row(
+                                              child: Row(
                                                   children: [
                                                     Text(
                                                       _showStatus > 0 ? "Remove " :"Add ",
@@ -292,13 +306,12 @@ class _ShowDetailsState extends State<ShowDetails> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
                                               onPressed: () {
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                      return LibraryDialog(_show,_show.status);
-                                                    });
+                                                      return LibraryDialog(_show,_showStatus);
+                                                    }).then((_) => getStatusFromDatabase());
                                               },
                                             ),
                                           ),

@@ -7,41 +7,33 @@ class ShowsList with ChangeNotifier{
   DatabaseHelper databaseHelper = DatabaseHelper();
 
 
+
+  _init() async{
+    showsList = await databaseHelper.getShowList();
+    notifyListeners();
+  }
   List<Shows> get showList{
+    _init();
     return [...showList];
   }
-
-
 
   Future<void> updateDatabase(Shows show,int status, int prevStatus) async {
     print("prevStatus : $prevStatus");
     if(status == 0){
+      showsList.removeWhere((currShow) => currShow.id == show.id);
       await databaseHelper.deleteShow(show.id);
     }else{
       show.status = status;
       if(prevStatus == 0){
+        showsList.add(show);
         await databaseHelper.insertShow(show);
       }else{
+        showsList.firstWhere((sh) => sh.id == show.id).status = show.status;
         await databaseHelper.updateShow(show);
       }
-
     }
+    notifyListeners();
   }
 
-  Future<int> getStatusFromDatabase(String id) async {
-    var show = await databaseHelper.getShowById(id);
-    return show == null ? 0 : show.status;
 
-    // if(show == null){
-    //   setState(() {
-    //     _showStatus = 0;
-    //   });
-    // }else{
-    //   if(_showStatus != show.status){
-    //     setState(() {
-    //       _showStatus = show.status;
-    //     });
-    //   }
-    // }
-  }
 }
