@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tv_maze/models/shows.dart';
 import 'package:tv_maze/services/api_services.dart';
 
-import 'show_details_screen.dart';
+import '../screens/show_details_screen.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final String searchedShow;
@@ -20,13 +20,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   bool searched = false;
 
   _initSearchResult() async {
-    await ApiService.instance
-        .searchShows(showsName: widget.searchedShow)
-        .then((list) {
-      setState(() {
-        _searchResultList = list;
-        searched = true;
-      });
+    List<Shows> list = await ApiService.instance
+        .searchShows(showsName: widget.searchedShow);
+    setState(() {
+      _searchResultList = list;
+      searched = true;
     });
   }
 

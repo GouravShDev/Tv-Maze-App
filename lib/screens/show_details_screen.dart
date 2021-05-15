@@ -1,12 +1,18 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tv_maze/models/shows.dart';
+import 'package:tv_maze/providers/shows_provider.dart';
 import 'package:tv_maze/services/api_services.dart';
+import 'package:tv_maze/status_color.dart';
+import 'package:tv_maze/utils/custom_icon_icons.dart';
+import 'package:tv_maze/widgets/library_add_dialog.dart';
 
 class ShowDetails extends StatefulWidget {
   final String id;
   final String title;
+
   ShowDetails({
     @required this.id,
     @required this.title,
@@ -21,37 +27,43 @@ class _ShowDetailsState extends State<ShowDetails> {
   Image _showImage;
   String firstHalfSummary = "";
   String secondHalfSummary = "";
+  int _showStatus = 0 ;
+
+
 
   bool showFullSummary = false;
-  _initShow() async {
-    await ApiService.instance.fetchShow(id: widget.id).then((show) {
-      setState(() {
+
+  _initShow() {
+    ApiService.instance.fetchShow(id: widget.id).then((show) {
         _show = show;
         // Checking if summary is too long
         // if it has length more that 200 characters divide into two half
         // User can choose to read full summary by tapping on "Show more" button
-        if (_show.summary.length > 200) {
+        if (_show.summary.length > 201) {
           // find next space in summary String
           int index = 200;
-          while(_show.summary[index] != " "){
+          while (_show.summary[index] != " ") {
             index++;
           }
           print(index);
           firstHalfSummary = _show.summary.substring(0, index);
-          secondHalfSummary = _show.summary.substring(index, _show.summary.length);
+          secondHalfSummary =
+              _show.summary.substring(index, _show.summary.length);
         } else {
           firstHalfSummary = _show.summary;
           secondHalfSummary = "";
         }
-      });
+        // Provider.of<ShowsList>(context,listen: false).getStatusFromDatabase(_show.id).then((value) => _showStatus = value);
     });
   }
+
 
   @override
   void initState() {
     super.initState();
 
     _initShow();
+
   }
 
   /*
@@ -65,20 +77,28 @@ class _ShowDetailsState extends State<ShowDetails> {
     return _showImage;
   }
 
-  // _buildDivider() {
-  //   return Container(
-  //     margin: const EdgeInsets.symmetric(
-  //       horizontal: 8.0,
-  //     ),
-  //     width: double.infinity,
-  //     height: 1.0,
-  //     color: Colors.grey.shade400,
-  //   );
-  // }
 
+
+
+  Color _getStatusColor(int status) {
+    switch (status) {
+      case 1:
+        return StatusColors.consideringColor;
+      case 2:
+        return StatusColors.watchingColor;
+      case 3:
+        return StatusColors.completedColor;
+      case 4:
+        return StatusColors.droppedColor;
+      default:
+        return Theme.of(context).textTheme.bodyText2.color;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    // final showsProvider = Provider.of<ShowsList>(context);
+    // showsProvider.getStatusFromDatabase(widget.id).then((value) => _showStatus = value);
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
     final headingTextStyle = TextStyle(
@@ -181,8 +201,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                                       Navigator.pop(context);
                                     },
                                   ),
-                                ),
-                              ),
+                                ),),
                             ],
                           ),
                         ),
@@ -194,11 +213,12 @@ class _ShowDetailsState extends State<ShowDetails> {
                             child: SizedBox(
                               height: height * 0.25,
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _getImage(_show.imageUrl),
                                   Container(
                                     child: Container(
+                                      height: height * 0.25,
                                       padding: const EdgeInsets.all(10.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -207,10 +227,6 @@ class _ShowDetailsState extends State<ShowDetails> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            _show.genres.join(', '),
-                                            style: headingTextStyle,
-                                          ),
                                           Flexible(
                                             child: SizedBox(
                                               width: width * 0.5,
@@ -227,6 +243,63 @@ class _ShowDetailsState extends State<ShowDetails> {
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.start,
                                               ),
+                                            ),
+                                          ),
+                                          Text(
+                                            _show.genres.join(', '),
+                                            style: headingTextStyle,
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 8.0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  // color: Colors.grey
+                                                color: Theme.of(context).textTheme.bodyText2.color
+                                                      .withOpacity(0.08),
+                                                  spreadRadius: 0,
+                                                  blurRadius: 10,
+                                                  offset: Offset(0,
+                                                      0), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: RaisedButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),side: BorderSide(color: Theme.of(context).textTheme.bodyText2.color.withOpacity(0.3),width: 1),),
+                                              // color: Theme.of(context).textTheme.bodyText2.color,
+                                              color: Theme.of(context).canvasColor,
+                                              child: Consumer<ShowsList>(
+                                                builder: (context, show, child) =>Row(
+                                                  children: [
+                                                    Text(
+                                                      _showStatus > 0 ? "Remove " :"Add ",
+                                                      style: TextStyle(
+                                                        color: _getStatusColor(_showStatus),
+                                                          // color: Theme.of(context).canvasColor,
+                                                        fontSize: width * 0.035,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Icon(
+                                                      CustomIcon.popcorn,
+                                                      color: _getStatusColor(_showStatus),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return LibraryDialog(_show,_show.status);
+                                                    });
+                                              },
                                             ),
                                           ),
                                         ],
@@ -336,7 +409,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                             ),
                             Text(
                               _show.runtime == 'N/A'
-                                  ? '-' 
+                                  ? '-'
                                   : _show.runtime + " min",
                               style: bodyTextStyle,
                             ),
@@ -358,7 +431,9 @@ class _ShowDetailsState extends State<ShowDetails> {
                   Padding(
                     padding: const EdgeInsets.only(left: 14, top: 1),
                     child: Text(
-                      (showFullSummary ? (firstHalfSummary+secondHalfSummary) : (firstHalfSummary +"...")),
+                      (showFullSummary
+                          ? (firstHalfSummary + secondHalfSummary)
+                          : (firstHalfSummary + "...")),
                       style: bodyTextStyle,
                     ),
                   ),
@@ -370,9 +445,11 @@ class _ShowDetailsState extends State<ShowDetails> {
                         InkWell(
                           child: Text(
                             showFullSummary ? "show less" : "show more",
-                            style: TextStyle(color: headingTextStyle.color.withOpacity(0.5),),
+                            style: TextStyle(
+                              color: headingTextStyle.color.withOpacity(0.5),
+                            ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               showFullSummary = !showFullSummary;
                             });
@@ -381,25 +458,29 @@ class _ShowDetailsState extends State<ShowDetails> {
                       ],
                     ),
                   ),
-                  if(_show.casts.length > 0) Padding(
-                    padding:
-                        const EdgeInsets.only(top: 14, left: 10, bottom: 4),
-                    child: Text(
-                      'Cast:',
-                      style: headingTextStyle,
+                  if (_show.casts.length > 0)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 14, left: 10, bottom: 4),
+                      child: Text(
+                        'Cast:',
+                        style: headingTextStyle,
+                      ),
                     ),
-                  ),
-                  if(_show.casts.length > 0) Row(
+                  if (_show.casts.length > 0)
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.chevron_left,size: width * 0.08,),
+                          icon: Icon(
+                            Icons.chevron_left,
+                            size: width * 0.08,
+                          ),
                           onPressed: () {
                             _scrollController.animateTo(
                               _scrollController.offset - width,
                               duration: Duration(seconds: 1),
                               curve: Curves.fastOutSlowIn,
-
                             );
                           },
                         ),
@@ -414,7 +495,12 @@ class _ShowDetailsState extends State<ShowDetails> {
                                 return Container(
                                   width: width * 0.1,
                                   height: width * 0.1,
-                                  margin: const EdgeInsets.only(left: 6.0, right: 6.0,top  : 3.0, bottom : 3.0,),
+                                  margin: const EdgeInsets.only(
+                                    left: 6.0,
+                                    right: 6.0,
+                                    top: 3.0,
+                                    bottom: 3.0,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.1),
                                     image: DecorationImage(
@@ -436,13 +522,15 @@ class _ShowDetailsState extends State<ShowDetails> {
                               }),
                         ),
                         IconButton(
-                          icon: Icon(Icons.chevron_right,size: width * 0.08,),
+                          icon: Icon(
+                            Icons.chevron_right,
+                            size: width * 0.08,
+                          ),
                           onPressed: () {
                             _scrollController.animateTo(
-                                _scrollController.offset + width,
-                                duration: Duration(seconds: 1),
-                                curve: Curves.fastOutSlowIn,
-
+                              _scrollController.offset + width,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.fastOutSlowIn,
                             );
                           },
                         ),

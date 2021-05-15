@@ -1,12 +1,20 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_maze/providers/shows_provider.dart';
+import 'package:tv_maze/screens/about_screen.dart';
 import 'package:tv_maze/screens/home_screen.dart';
+import 'package:tv_maze/screens/libaray_screen.dart';
+import 'package:tv_maze/screens/setting_screen.dart';
 import 'package:tv_maze/theme_builder.dart';
 
 void main() {
   runApp(DevicePreview(
-    builder: (context) => MyApp(),
+    builder: (context) => ChangeNotifierProvider(
+      create: (context) => ShowsList(),
+      child: MyApp(),
+    ),
     enabled: !kReleaseMode,
   ));
 }
@@ -30,14 +38,19 @@ class MyApp extends StatelessWidget {
               color: _textColor, // Using text for icon colors
             ),
             textTheme: TextTheme(
-                headline6: TextStyle(
-                    color: _textColor,
-                    fontFamily: 'AlegreyaSans',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24),
+              headline6: TextStyle(
+                  color: _textColor,
+                  fontFamily: 'AlegreyaSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24),
             ),
           ),
         ),
+        routes: {
+          LibraryScreen.routeName: (context) => LibraryScreen(),
+          Settings.routeName: (context) => Settings(),
+          AboutScreen.routeName: (context) => AboutScreen(),
+        },
         home: HomeScreen(),
       );
     });

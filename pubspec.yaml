@@ -29,6 +29,10 @@ dependencies:
   auto_size_text: ^2.1.0
   shared_preferences: ^0.5.12+4
   device_preview: ^0.5.5
+  sqflite : any
+  path_provider : any
+  intl: any
+  provider: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -85,6 +89,10 @@ flutter:
     - family: Lato
       fonts:
         - asset: assets/fonts/Lato-Regular.ttf
+
+    - family:  CustomIcon
+      fonts:
+        - asset: assets/icons/CustomIcon.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

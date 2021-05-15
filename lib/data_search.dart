@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tv_maze/screens/search_result.dart';
+import './widgets/search_result.dart';
 
 class DataSearch extends SearchDelegate<String> {
   @override

@@ -4,11 +4,11 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:tv_maze/data_search.dart';
 import 'package:tv_maze/models/shows_data.dart';
+import 'package:tv_maze/screens/libaray_screen.dart';
+import 'package:tv_maze/widgets/app_drawer.dart';
 
 import 'package:tv_maze/widgets/shows_tile_widget.dart';
 
-import 'about_screen.dart';
-import 'setting_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -119,79 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _buildDrawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-              // decoration: BoxDecoration(
-              //     gradient: LinearGradient(colors: <Color>[
-              //       Colors.red.shade400,
-              //       Colors.yellowAccent.shade400,
-              //     ],)
-              // ),
-              child: FittedBox(
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 10,
-              backgroundImage: AssetImage("assets/images/logo.png"),
-            ),
-            fit: BoxFit.fitHeight,
-          )),
-          SizedBox(
-            height: 18,
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => Settings(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.info),
-            title: Text(
-              'About',
-              style: TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => AboutScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.mail_rounded),
-            title: Text(
-              'Contact',
-              style: TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //     color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
-      drawer: _buildDrawer(),
+      drawer: AppDrawer(),
       body: (_showsData == null)
           ? Center(
               child: CircularProgressIndicator(
@@ -238,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     imageUrl: _showsData.imageUrls[index],
                     id: _showsData.ids[index],
                     rating: _showsData.ratings[index],
+                    status: 0,
                     mediaQueryData: MediaQuery.of(context),
                   );
                 }),

@@ -6,6 +6,7 @@ import '../helper_methods.dart';
 import '../theme_builder.dart';
 
 class Settings extends StatelessWidget {
+  static const routeName = '/setting';
   /*
   * This method change according to user selection
   */
