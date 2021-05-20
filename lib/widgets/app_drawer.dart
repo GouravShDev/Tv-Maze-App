@@ -19,7 +19,7 @@ class AppDrawer extends StatelessWidget {
             // ),
               child: FittedBox(
                 child: CircleAvatar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).canvasColor,
                   radius: 10,
                   backgroundImage: AssetImage("assets/images/logo.png"),
                 ),

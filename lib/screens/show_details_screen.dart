@@ -31,6 +31,7 @@ class _ShowDetailsState extends State<ShowDetails> {
 
 
   bool showFullSummary = false;
+  bool summaryUnder = false;
 
   _initShow() {
     ApiService.instance.fetchShow(id: widget.id).then((show) {
@@ -50,7 +51,8 @@ class _ShowDetailsState extends State<ShowDetails> {
               _show.summary.substring(index, _show.summary.length);
         } else {
           firstHalfSummary = _show.summary;
-          secondHalfSummary = "";
+          summaryUnder = true;
+          // secondHalfSummary = "";
         }
         getStatusFromDatabase();
     });
@@ -443,14 +445,14 @@ class _ShowDetailsState extends State<ShowDetails> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 14, top: 1),
-                    child: Text(
+                    child: (summaryUnder)?Text(firstHalfSummary, style: bodyTextStyle,):Text(
                       (showFullSummary
                           ? (firstHalfSummary + secondHalfSummary)
                           : (firstHalfSummary + "...")),
                       style: bodyTextStyle,
                     ),
                   ),
-                  Padding(
+                  if(!summaryUnder) Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -506,32 +508,42 @@ class _ShowDetailsState extends State<ShowDetails> {
                               itemCount: _show.casts.length,
                               itemBuilder: (context, i) {
                                 return Container(
-                                  width: width * 0.1,
-                                  height: width * 0.1,
-                                  margin: const EdgeInsets.only(
-                                    left: 6.0,
-                                    right: 6.0,
-                                    top: 3.0,
-                                    bottom: 3.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    image: DecorationImage(
-                                      image: NetworkImage(_show.casts[i]),
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50.0)),
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          .color
-                                          .withOpacity(0.6),
-                                      width: 1.0,
-                                    ),
+                                  // width: width * 0.1,
+                                  // decoration: BoxDecoration(
+                                  //   color: Colors.grey.withOpacity(0.1),
+                                  //   borderRadius:
+                                  //   BorderRadius.all(Radius.circular(50.0)),
+                                  //   border: Border.all(
+                                  //     color: Theme.of(context)
+                                  //         .textTheme
+                                  //         .bodyText2
+                                  //         .color
+                                  //         .withOpacity(0.5),
+                                  //     width: 1.0,
+                                  //   ),
+                                  // ),
+                                  margin: const EdgeInsets.symmetric(
+                                        vertical: 3.0,
+                                        horizontal: 6.0,
+                                      ),
+                                  child: CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundImage:
+                                    NetworkImage(_show.casts[i]),
+                                    backgroundColor: Colors.transparent,
                                   ),
                                 );
+                                // return Container(
+                                //   width: width * 0.1,
+                                //   // height: width * 0.1,
+                                //   margin: const EdgeInsets.only(
+                                //     left: 6.0,
+                                //     right: 6.0,
+                                //     top: 3.0,
+                                //     bottom: 3.0,
+                                //   ),
+
+                                // );
                               }),
                         ),
                         IconButton(

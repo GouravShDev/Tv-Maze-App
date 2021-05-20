@@ -1,14 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:tv_maze/data_search.dart';
 import 'package:tv_maze/models/shows_data.dart';
-import 'package:tv_maze/screens/libaray_screen.dart';
 import 'package:tv_maze/widgets/app_drawer.dart';
 
 import 'package:tv_maze/widgets/shows_tile_widget.dart';
-
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,12 +16,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
+  bool _offline = false;
   ShowsData _showsData;
   int _page = 1;
 
   @override
   void initState() {
     super.initState();
+    print("page is " + _page.toString());
     _initShows();
   }
 
@@ -32,21 +33,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _initShows() {
     _getDataFromWeb(_page++).then((data) {
-      List<String> ids = [];
-      List<String> imageUrls = [];
-      List<String> ratings = [];
-      List<String> titles = [];
-      data.forEach((element) {
-        ids.add(element['id']);
-        titles.add(element['title']);
-        ratings.add(element['rating']);
-        imageUrls.add(element['imageUrl']);
-      });
-      ShowsData showsData = ShowsData(
-          ids: ids, imageUrls: imageUrls, ratings: ratings, titles: titles);
-      setState(() {
-        _showsData = showsData;
-      });
+      if(data!=null){
+        List<String> ids = [];
+        List<String> imageUrls = [];
+        List<String> ratings = [];
+        List<String> titles = [];
+        data.forEach((element) {
+          ids.add(element['id']);
+          titles.add(element['title']);
+          ratings.add(element['rating']);
+          imageUrls.add(element['imageUrl']);
+        });
+        ShowsData showsData = ShowsData(
+            ids: ids, imageUrls: imageUrls, ratings: ratings, titles: titles);
+        setState(() {
+          _showsData = showsData;
+        });
+      }
+
     });
   }
 
@@ -57,8 +61,19 @@ class _HomeScreenState extends State<HomeScreen> {
   */
   Future<List<Map<String, String>>> _getDataFromWeb(int page) async {
     List<int> noImageTitleIndex = [];
-    final response =
-        await http.get("https://www.tvmaze.com/shows?page=" + page.toString());
+    http.Response response;
+    try {
+      response = await http
+          .get("https://www.tvmaze.com/shows?page=" + page.toString());
+    } on SocketException catch (_) {
+      print("No internet");
+      setState(() {
+        _offline = true;
+        page = 1;
+      });
+      return null;
+    }
+    print("response " + response.statusCode.toString());
     dom.Document document = parser.parse(response.body);
     final elements = document.getElementsByClassName("column column-block");
     List<Map<String, String>> listOfShowData = elements
@@ -119,16 +134,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: (){
-            showSearch(context: context, delegate: DataSearch());
-          }),
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              }),
         ],
         title: Text(
           'TvMaze',
@@ -138,13 +153,37 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: AppDrawer(),
       body: (_showsData == null)
-          ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor, // Red
-                ),
-              ),
-            )
+          ? (_offline == false)
+              ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).accentColor, // Green
+                    ),
+                  ),
+                )
+              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Something went wrong !!'),
+                      Text('Check your Internet Connection'),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _offline = false;
+                          });
+                            _initShows();
+                        },
+                        child: const Text(
+                          'Try Again',
+                        ),
+                      ),
+                    ],
+                  ),
+                ])
           : NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollDetails) {
                 if (!_isLoading &&
