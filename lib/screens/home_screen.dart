@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -66,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       response = await http
           .get("https://www.tvmaze.com/shows?page=" + page.toString());
-    } on SocketException catch (_) {
-      print("No internet");
+    } on Exception catch (e) {
+      print("ERROR : $e");
       setState(() {
         _offline = true;
       });

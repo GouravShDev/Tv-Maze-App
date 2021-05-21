@@ -22,10 +22,13 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   _initSearchResult() async {
     List<Shows> list = await ApiService.instance
         .searchShows(showsName: widget.searchedShow);
-    setState(() {
-      _searchResultList = list;
-      searched = true;
-    });
+    if(mounted){
+      setState(() {
+        _searchResultList = list;
+        searched = true;
+      });
+    }
+
   }
 
   @override
@@ -47,7 +50,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
             : Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor, // Red
+                    Theme.of(context).accentColor, // Red
                   ),
                 ),
               )

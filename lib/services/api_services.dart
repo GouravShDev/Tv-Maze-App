@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tv_maze/models/shows.dart';
 
@@ -64,8 +63,8 @@ class ApiService{
       }else{
         return null;
       }
-    } on SocketException catch (e) {
-      print("Error : $e.message");
+    } on Exception catch (e) {
+      print("ERROR : $e.message");
       return null;
     }
   }

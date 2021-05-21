@@ -35,7 +35,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget build(BuildContext context) {
     // final mediaQuery = MediaQuery.of(context);
     final showProvider = Provider.of<ShowsList>(context);
-    _showList = showProvider.showsList;
+    _showList = showProvider.showList;
     return Scaffold(
       appBar: AppBar(
         title: Text('Library'),

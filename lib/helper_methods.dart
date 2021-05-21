@@ -3,12 +3,6 @@
 /*
 * This method removes Html tags like <br> from the string
 */
-import 'package:flutter/material.dart';
-import 'package:tv_maze/screens/about_screen.dart';
-import 'package:tv_maze/screens/home_screen.dart';
-import 'package:tv_maze/screens/setting_screen.dart';
-
-import 'screens/libaray_screen.dart';
 
 String removeHTMLTag(String string){
   RegExp exp = RegExp(
