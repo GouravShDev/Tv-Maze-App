@@ -20,6 +20,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final materialColor = createMaterialColor(Color.fromRGBO(0,223,213,1));
   @override
   Widget build(BuildContext context) {
     return ThemeBuilder(builder: (context, _brightness, _uiColor, _textColor) {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         title: 'TV Maze',
         builder: DevicePreview.appBuilder,
         theme: ThemeData(
-          primarySwatch: createMaterialColor(Color.fromRGBO(0,223,213,1)),
+          primarySwatch: materialColor,
           brightness: _brightness,
           canvasColor: _uiColor,
           fontFamily: 'Lato',
@@ -35,10 +36,12 @@ class MyApp extends StatelessWidget {
             color: _uiColor,
             elevation: 0,
             iconTheme: IconThemeData(
+              // color: materialColor.shade800,
               color: _textColor, // Using text for icon colors
             ),
             textTheme: TextTheme(
               headline6: TextStyle(
+                  // color: materialColor.shade800,
                   color: _textColor,
                   fontFamily: 'AlegreyaSans',
                   fontWeight: FontWeight.bold,

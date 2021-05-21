@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_maze/providers/shows_provider.dart';
 import 'package:tv_maze/screens/show_details_screen.dart';
-import 'package:tv_maze/status_color.dart';
+import 'package:tv_maze/constants.dart';
 import 'package:tv_maze/utils/custom_icon_icons.dart';
 
 class ShowsTile extends StatelessWidget {
@@ -147,6 +149,9 @@ class ShowsTile extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
+                onLongPress: (){
+                  if(status > 0 ) showAlertDialog(context,id);
+                },
                 onTap: () {
                   print(id);
                   Navigator.push(
@@ -166,4 +171,42 @@ class ShowsTile extends StatelessWidget {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context, String showId) {
+
+  // set up the buttons
+  Widget cancelButton = FlatButton(
+    child: Text("Cancel"),
+    onPressed:  () {
+      Navigator.pop(context);
+    },
+  );
+  Widget continueButton = FlatButton(
+    child: Text("Ok"),
+    onPressed:  () {
+      // Remove Show from Database
+      final showProvider = Provider.of<ShowsList>(context,listen: false);
+      showProvider.removeFromDatabase(showId);
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    // title: Text("Remove from Library"),
+    content: Text("Do you want to remove this show from library?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

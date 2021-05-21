@@ -3,7 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tv_maze/models/shows.dart';
 import 'package:tv_maze/services/api_services.dart';
-import 'package:tv_maze/status_color.dart';
+import 'package:tv_maze/constants.dart';
 import 'package:tv_maze/utils/custom_icon_icons.dart';
 import 'package:tv_maze/utils/database_helper.dart';
 import 'package:tv_maze/widgets/library_add_dialog.dart';
@@ -26,6 +26,7 @@ class _ShowDetailsState extends State<ShowDetails> {
   Image _showImage;
   String firstHalfSummary = "";
   String secondHalfSummary = "";
+  bool _offline = false;
   int _showStatus = 0 ;
 
 
@@ -35,6 +36,7 @@ class _ShowDetailsState extends State<ShowDetails> {
 
   _initShow() {
     ApiService.instance.fetchShow(id: widget.id).then((show) {
+      if(show != null){
         _show = show;
         // Checking if summary is too long
         // if it has length more that 200 characters divide into two half
@@ -55,6 +57,12 @@ class _ShowDetailsState extends State<ShowDetails> {
           // secondHalfSummary = "";
         }
         getStatusFromDatabase();
+      }else{
+        setState(() {
+          _offline = true;
+        });
+      }
+
     });
   }
 
@@ -128,14 +136,36 @@ class _ShowDetailsState extends State<ShowDetails> {
     return Scaffold(
       // appBar: AppBar(),
       // Added Center widget as placeholder for the time being
-      body: _show == null
-          ? Center(
+      body: (_show == null)
+          ? (!_offline) ? Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor, // Red
+                  Theme.of(context).accentColor,
                 ),
               ),
-            )
+            ) : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Something went wrong !!'),
+            Text('Check your Internet Connection'),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                setState(() {
+                  _offline = false;
+                });
+                _initShow();
+              },
+              child: Text(
+                'Try Again', style: TextStyle(color: Theme.of(context).colorScheme.secondaryVariant,),
+              ),
+            ),
+          ],
+        ),
+      ])
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

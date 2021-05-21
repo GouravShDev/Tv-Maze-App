@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tv_maze/models/shows.dart';
 
@@ -53,13 +54,18 @@ class ApiService{
     // Converting String to URI
     Uri uri = Uri.parse("https://"+_baseUrl+"/shows/"+id+"?embed[]=episodes&embed[]=cast");
     print(uri);
-    var response = await http.get(uri);
-    if(response.statusCode == 200){
-      Map<String, dynamic> data = json.decode(response.body);
-      Shows show = Shows.fromMap(data);
-      show.displayShowData();
-      return show;
-    }else{
+    try {
+      var response = await http.get(uri);
+      if(response.statusCode == 200){
+        Map<String, dynamic> data = json.decode(response.body);
+        Shows show = Shows.fromMap(data);
+        show.displayShowData();
+        return show;
+      }else{
+        return null;
+      }
+    } on SocketException catch (e) {
+      print("Error : $e.message");
       return null;
     }
   }

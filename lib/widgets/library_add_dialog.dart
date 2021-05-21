@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_maze/models/shows.dart';
 import 'package:tv_maze/providers/shows_provider.dart';
-import 'package:tv_maze/status_color.dart';
+import 'package:tv_maze/constants.dart';
 
 class LibraryDialog extends StatefulWidget {
 

@@ -76,18 +76,18 @@ class AppDrawer extends StatelessWidget {
               Navigator.pushNamed(context, AboutScreen.routeName);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.mail_rounded),
-            title: Text(
-              'Contact',
-              style: TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          )
+          // ListTile(
+          //   leading: Icon(Icons.mail_rounded),
+          //   title: Text(
+          //     'Contact',
+          //     style: TextStyle(
+          //       fontSize: 22,
+          //     ),
+          //   ),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //   },
+          // )
         ],
       ),
     );

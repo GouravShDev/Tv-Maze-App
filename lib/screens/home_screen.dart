@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   */
 
   _initShows() {
-    _getDataFromWeb(_page++).then((data) {
+    _getDataFromWeb(_page).then((data) {
       if(data!=null){
         List<String> ids = [];
         List<String> imageUrls = [];
@@ -49,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _showsData = showsData;
         });
+        _page++;
       }
 
     });
@@ -69,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
       print("No internet");
       setState(() {
         _offline = true;
-        page = 1;
       });
       return null;
     }
@@ -136,8 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -145,11 +147,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 showSearch(context: context, delegate: DataSearch());
               }),
         ],
-        title: Text(
-          'TvMaze',
-          // style: TextStyle(
-          //     color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
+        // title: Text(
+        //   'TvMaze',
+        //   style: TextStyle(
+        //       color: Theme.of(context).primaryColorDark, fontSize: 24, fontWeight: FontWeight.bold),
+        // ),
+        title: SizedBox(
+          width: width * 0.3,
+          child: Image.asset('assets/images/appTitle.png',fit: BoxFit.fitWidth,),
+        )
       ),
       drawer: AppDrawer(),
       body: (_showsData == null)
@@ -177,8 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           });
                             _initShows();
                         },
-                        child: const Text(
-                          'Try Again',
+                        child: Text(
+                          'Try Again', style: TextStyle(color: Theme.of(context).colorScheme.secondaryVariant,),
                         ),
                       ),
                     ],

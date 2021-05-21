@@ -17,6 +17,13 @@ class ShowsList with ChangeNotifier{
     return [...showList];
   }
 
+  // Remove Show from database using id
+  Future<void> removeFromDatabase(String showId) async{
+    showsList.removeWhere((currShow) => currShow.id == showId);
+    await databaseHelper.deleteShow(showId);
+    notifyListeners();
+  }
+
   Future<void> updateDatabase(Shows show,int status, int prevStatus) async {
     print("prevStatus : $prevStatus");
     if(status == 0){

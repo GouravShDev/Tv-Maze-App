@@ -66,6 +66,4 @@ class _LibraryScreenState extends State<LibraryScreen> {
       ),
     );
   }
-
-
 }
