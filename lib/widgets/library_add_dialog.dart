@@ -70,6 +70,7 @@ class _LibraryDialogState extends State<LibraryDialog> {
       width: width,
       padding: const EdgeInsets.all(8.0),
       child: OutlinedButton(
+        // Different Button styles according to the current Theme
         style: OutlinedButton.styleFrom(
           // elevation: 1.0,
           shadowColor: _activeSelection == status ? Theme.of(context).textTheme.bodyText2.color:_statusList[status].color,
@@ -89,8 +90,6 @@ class _LibraryDialogState extends State<LibraryDialog> {
     );
   }
   void _tapHandler(int tappedStatus) {
-    print("selected Status : $tappedStatus");
-    print("current Status : $_activeSelection");
     setState(() {
       if (tappedStatus == _activeSelection) {
         _activeSelection = 0;
@@ -99,13 +98,6 @@ class _LibraryDialogState extends State<LibraryDialog> {
       }
     });
   }
-
-  // void _applyButtonHandler(){
-  //   if(_activeSelection != widget.activeStatus){
-  //     widget.databaseUpdater(_activeSelection,widget.activeStatus);
-  //   }
-  //   Navigator.pop(context);
-  // }
   @override
   void initState() {
     setState(() {
@@ -123,15 +115,11 @@ class _LibraryDialogState extends State<LibraryDialog> {
     if(_activeSelection== null){
       _activeSelection = widget._activeStatus;
     }
-
-    // final buttonTextSize = size.width * 0.03;
-    // double buttonOpacity = 0.4;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       elevation: 16,
-      // backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -156,12 +144,7 @@ class _LibraryDialogState extends State<LibraryDialog> {
             SizedBox(
               height: size.height * 0.01,
             ),
-            // OutlineButton(onPressed: (){},child: Text(statusList[0].statusName),textColor: statusList[0].color,),
-            Expanded(
-              // color: Colors.blue,
-              // height: size.height * 0.2,
-              // color: Colors.red,
-              // padding: const EdgeInsets.only(top: 8.0),
+           Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -227,6 +210,5 @@ class _LibraryDialogState extends State<LibraryDialog> {
 class ShowStatus {
   String statusName;
   Color color;
-
   ShowStatus({this.statusName, this.color});
 }

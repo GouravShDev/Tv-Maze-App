@@ -17,12 +17,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
   bool _offline = false;
   ShowsData _showsData;
+  // TV Maze website current page number
   int _page = 1;
 
   @override
   void initState() {
     super.initState();
-    print("page is " + _page.toString());
     _initShows();
   }
 
@@ -146,11 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 showSearch(context: context, delegate: DataSearch());
               }),
         ],
-        // title: Text(
-        //   'TvMaze',
-        //   style: TextStyle(
-        //       color: Theme.of(context).primaryColorDark, fontSize: 24, fontWeight: FontWeight.bold),
-        // ),
         title: SizedBox(
           width: width * 0.3,
           child: Image.asset('assets/images/appTitle.png',fit: BoxFit.fitWidth,),
@@ -191,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ])
           : NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollDetails) {
+                // Checking if user scrolls to end of current Shows List
                 if (!_isLoading &&
                     scrollDetails.metrics.pixels ==
                         scrollDetails.metrics.maxScrollExtent) {

@@ -22,20 +22,7 @@ class ShowsTile extends StatelessWidget {
       this.status,
       this.mediaQueryData});
 
-  // String _getStatusText(int st){
-  //   switch (st){
-  //     case 1:
-  //       return "Considering";
-  //     case 2:
-  //       return "Watching";
-  //     case 3:
-  //       return "Completed";
-  //     case 4:
-  //       return "Dropped";
-  //     default:
-  //       return "none";
-  //   }
-  // }
+// This method returns Color for Add Icon Depending on Status variable
   Color _getStatusColor(int status) {
     switch (status) {
       case 1:
@@ -85,14 +72,6 @@ class ShowsTile extends StatelessWidget {
               ),
             ),
           ),
-          // Positioned(
-          //   right: 0,
-          //   top: 0,
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(1.0),
-          //     child: Icon(Icons.bookmark,size: 24,),
-          //   ),
-          // ),
           if(status > 0 ) Positioned(
             top: 0,
             left: 0,
@@ -102,7 +81,6 @@ class ShowsTile extends StatelessWidget {
                   bottomRight: Radius.circular(8),
                   // topRight: Radius.circular(8),
                 ),
-                // color: Colors.orange.withOpacity(0.95),
                 color: Colors.black.withOpacity(0.75),
               ),
               // width: _containerWidth,
@@ -173,6 +151,11 @@ class ShowsTile extends StatelessWidget {
   }
 }
 
+/*
+* Display dialog to remove show from library
+* when long press on any show in Library
+* (Only called on Library Screen)
+* */
 showAlertDialog(BuildContext context, String showId) {
 
   // set up the buttons

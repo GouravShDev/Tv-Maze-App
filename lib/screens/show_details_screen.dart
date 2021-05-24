@@ -24,19 +24,17 @@ class ShowDetails extends StatefulWidget {
 class _ShowDetailsState extends State<ShowDetails> {
   Shows _show;
   Image _showImage;
-  String firstHalfSummary = "";
-  String secondHalfSummary = "";
+  String _firstHalfSummary = "";
+  String _secondHalfSummary = "";
   bool _offline = false;
-  int _showStatus = 0 ;
+  int _showStatus = 0;
 
-
-
-  bool showFullSummary = false;
-  bool summaryUnder = false;
+  bool _showFullSummary = false;
+  bool _summaryUnder = false;
 
   _initShow() {
     ApiService.instance.fetchShow(id: widget.id).then((show) {
-      if(show != null){
+      if (show != null) {
         _show = show;
         // Checking if summary is too long
         // if it has length more that 200 characters divide into two half
@@ -48,31 +46,28 @@ class _ShowDetailsState extends State<ShowDetails> {
             index++;
           }
           print(index);
-          firstHalfSummary = _show.summary.substring(0, index);
-          secondHalfSummary =
+          _firstHalfSummary = _show.summary.substring(0, index);
+          _secondHalfSummary =
               _show.summary.substring(index, _show.summary.length);
         } else {
-          firstHalfSummary = _show.summary;
-          summaryUnder = true;
+          _firstHalfSummary = _show.summary;
+          _summaryUnder = true;
           // secondHalfSummary = "";
         }
-        getStatusFromDatabase();
-      }else{
+        _getStatusFromDatabase();
+      } else {
         setState(() {
           _offline = true;
         });
       }
-
     });
   }
-
 
   @override
   void initState() {
     super.initState();
 
     _initShow();
-
   }
 
   /*
@@ -86,24 +81,25 @@ class _ShowDetailsState extends State<ShowDetails> {
     return _showImage;
   }
 
-
-  getStatusFromDatabase() async {
+/*
+* This method retrieve value of status variable From Database
+*/
+  _getStatusFromDatabase() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     var show = await databaseHelper.getShowById(widget.id);
-
-    if(show == null){
+    // If show not found in database so getShowId returns null
+    if (show == null) {
       setState(() {
         _showStatus = 0;
       });
-    }else{
-      if(_showStatus != show.status){
+    } else {
+      if (_showStatus != show.status) {
         setState(() {
           _showStatus = show.status;
         });
       }
     }
   }
-
 
   Color _getStatusColor(int status) {
     switch (status) {
@@ -119,11 +115,10 @@ class _ShowDetailsState extends State<ShowDetails> {
         return Theme.of(context).textTheme.bodyText2.color;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    // final showsProvider = Provider.of<ShowsList>(context);
-    // showsProvider.getStatusFromDatabase(widget.id).then((value) => _showStatus = value);
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
     final headingTextStyle = TextStyle(
@@ -134,38 +129,42 @@ class _ShowDetailsState extends State<ShowDetails> {
     );
     final _scrollController = ScrollController();
     return Scaffold(
-      // appBar: AppBar(),
-      // Added Center widget as placeholder for the time being
       body: (_show == null)
-          ? (!_offline) ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).accentColor,
-                ),
-              ),
-            ) : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Something went wrong !!'),
-            Text('Check your Internet Connection'),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              onPressed: () {
-                setState(() {
-                  _offline = false;
-                });
-                _initShow();
-              },
-              child: Text(
-                'Try Again', style: TextStyle(color: Theme.of(context).colorScheme.secondaryVariant,),
-              ),
-            ),
-          ],
-        ),
-      ])
+          ? (!_offline)
+              ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).accentColor,
+                    ),
+                  ),
+                )
+              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Something went wrong !!'),
+                      Text('Check your Internet Connection'),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _offline = false;
+                          });
+                          _initShow();
+                        },
+                        child: Text(
+                          'Try Again',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ])
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,6 +181,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                             children: [
                               ShaderMask(
                                 shaderCallback: (rect) {
+                                  // Create Image Fading Effect
                                   return LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -190,6 +190,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                                       rect.width, rect.height));
                                 },
                                 blendMode: BlendMode.dstIn,
+                                // Create Image blur effect
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -209,22 +210,9 @@ class _ShowDetailsState extends State<ShowDetails> {
                                   ],
                                 ),
                               ),
-                              // FittedBox(
-                              //     fit: BoxFit.fitWidth,
-                              //     child: _getImage(_show.imageUrl),
-                              //   ),
-                              // ClipRRect(
-                              //   child: BackdropFilter(
-                              //     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              //     child: Container(
-                              //       color: Colors.grey.withOpacity(0.1),
-                              //     ),
-                              //   ),
-                              // ),
                               Positioned(
                                 top: mediaQuery.padding.top,
                                 child: Container(
-                                  // padding: EdgeInsets.only(left: 8),
                                   decoration: ShapeDecoration(
                                     color: Theme.of(context).canvasColor,
                                     shape: RoundedRectangleBorder(
@@ -248,7 +236,8 @@ class _ShowDetailsState extends State<ShowDetails> {
                                       Navigator.pop(context);
                                     },
                                   ),
-                                ),),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -303,7 +292,10 @@ class _ShowDetailsState extends State<ShowDetails> {
                                               boxShadow: [
                                                 BoxShadow(
                                                   // color: Colors.grey
-                                                color: Theme.of(context).textTheme.bodyText2.color
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText2
+                                                      .color
                                                       .withOpacity(0.08),
                                                   spreadRadius: 0,
                                                   blurRadius: 10,
@@ -314,36 +306,52 @@ class _ShowDetailsState extends State<ShowDetails> {
                                             ),
                                             child: RaisedButton(
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),side: BorderSide(color: Theme.of(context).textTheme.bodyText2.color.withOpacity(0.3),width: 1),),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                side: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText2
+                                                        .color
+                                                        .withOpacity(0.3),
+                                                    width: 1),
+                                              ),
                                               // color: Theme.of(context).textTheme.bodyText2.color,
-                                              color: Theme.of(context).canvasColor,
+                                              color:
+                                                  Theme.of(context).canvasColor,
                                               child: Row(
-                                                  children: [
-                                                    Text(
-                                                      _showStatus > 0 ? "Remove " :"Add ",
-                                                      style: TextStyle(
-                                                        color: _getStatusColor(_showStatus),
-                                                          // color: Theme.of(context).canvasColor,
-                                                        fontSize: width * 0.035,
-                                                      ),
+                                                children: [
+                                                  Text(
+                                                    _showStatus > 0
+                                                        ? "Remove "
+                                                        : "Add ",
+                                                    style: TextStyle(
+                                                      color: _getStatusColor(
+                                                          _showStatus),
+                                                      // color: Theme.of(context).canvasColor,
+                                                      fontSize: width * 0.035,
                                                     ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Icon(
-                                                      CustomIcon.popcorn,
-                                                      color: _getStatusColor(_showStatus),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Icon(
+                                                    CustomIcon.popcorn,
+                                                    color: _getStatusColor(
+                                                        _showStatus),
+                                                  ),
+                                                ],
+                                              ),
                                               onPressed: () {
                                                 showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return LibraryDialog(_show,_showStatus);
-                                                    }).then((_) => getStatusFromDatabase());
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return LibraryDialog(
+                                                              _show,
+                                                              _showStatus);
+                                                        })
+                                                    .then((_) =>
+                                                        _getStatusFromDatabase());
                                               },
                                             ),
                                           ),
@@ -362,14 +370,11 @@ class _ShowDetailsState extends State<ShowDetails> {
                   SizedBox(
                     height: height * 0.02,
                   ),
-                  // _buildDivider(),
-                  // SizedBox(height: height * 0.015,),
                   Container(
                     padding: EdgeInsets.only(
                       top: height * 0.015,
                       bottom: height * 0.015,
                     ),
-                    // margin: EdgeInsets.only(left: 8.0,right: 8.0),
                     color: Theme.of(context)
                         .textTheme
                         .bodyText2
@@ -475,34 +480,40 @@ class _ShowDetailsState extends State<ShowDetails> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 14, top: 1),
-                    child: (summaryUnder)?Text(firstHalfSummary, style: bodyTextStyle,):Text(
-                      (showFullSummary
-                          ? (firstHalfSummary + secondHalfSummary)
-                          : (firstHalfSummary + "...")),
-                      style: bodyTextStyle,
-                    ),
-                  ),
-                  if(!summaryUnder) Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          child: Text(
-                            showFullSummary ? "show less" : "show more",
-                            style: TextStyle(
-                              color: headingTextStyle.color.withOpacity(0.5),
-                            ),
+                    child: (_summaryUnder)
+                        ? Text(
+                            _firstHalfSummary,
+                            style: bodyTextStyle,
+                          )
+                        : Text(
+                            (_showFullSummary
+                                ? (_firstHalfSummary + _secondHalfSummary)
+                                : (_firstHalfSummary + "...")),
+                            style: bodyTextStyle,
                           ),
-                          onTap: () {
-                            setState(() {
-                              showFullSummary = !showFullSummary;
-                            });
-                          },
-                        )
-                      ],
-                    ),
                   ),
+                  if (!_summaryUnder)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            child: Text(
+                              _showFullSummary ? "show less" : "show more",
+                              style: TextStyle(
+                                color: headingTextStyle.color.withOpacity(0.5),
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _showFullSummary = !_showFullSummary;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
                   if (_show.casts.length > 0)
                     Padding(
                       padding:
@@ -522,6 +533,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                             size: width * 0.08,
                           ),
                           onPressed: () {
+                            // Scroll the cast images to left
                             _scrollController.animateTo(
                               _scrollController.offset - width,
                               duration: Duration(seconds: 1),
@@ -538,42 +550,17 @@ class _ShowDetailsState extends State<ShowDetails> {
                               itemCount: _show.casts.length,
                               itemBuilder: (context, i) {
                                 return Container(
-                                  // width: width * 0.1,
-                                  // decoration: BoxDecoration(
-                                  //   color: Colors.grey.withOpacity(0.1),
-                                  //   borderRadius:
-                                  //   BorderRadius.all(Radius.circular(50.0)),
-                                  //   border: Border.all(
-                                  //     color: Theme.of(context)
-                                  //         .textTheme
-                                  //         .bodyText2
-                                  //         .color
-                                  //         .withOpacity(0.5),
-                                  //     width: 1.0,
-                                  //   ),
-                                  // ),
                                   margin: const EdgeInsets.symmetric(
-                                        vertical: 3.0,
-                                        horizontal: 6.0,
-                                      ),
+                                    vertical: 3.0,
+                                    horizontal: 6.0,
+                                  ),
                                   child: CircleAvatar(
                                     radius: 20.0,
                                     backgroundImage:
-                                    NetworkImage(_show.casts[i]),
+                                        NetworkImage(_show.casts[i]),
                                     backgroundColor: Colors.transparent,
                                   ),
                                 );
-                                // return Container(
-                                //   width: width * 0.1,
-                                //   // height: width * 0.1,
-                                //   margin: const EdgeInsets.only(
-                                //     left: 6.0,
-                                //     right: 6.0,
-                                //     top: 3.0,
-                                //     bottom: 3.0,
-                                //   ),
-
-                                // );
                               }),
                         ),
                         IconButton(
@@ -582,6 +569,7 @@ class _ShowDetailsState extends State<ShowDetails> {
                             size: width * 0.08,
                           ),
                           onPressed: () {
+                            // Scroll the cast images to right
                             _scrollController.animateTo(
                               _scrollController.offset + width,
                               duration: Duration(seconds: 1),

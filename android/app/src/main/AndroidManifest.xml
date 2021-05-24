@@ -2,7 +2,7 @@
     package="com.gouravsh.tv_maze">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="tv_maze"
+        android:label="Tv Maze"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
