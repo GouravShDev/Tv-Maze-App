@@ -2,7 +2,7 @@
 
 Tv Maze app is an android application created using flutter framework which uses [TvMaze Api](https://www.tvmaze.com/api) to display its data.
 
-This app helps keeping tracks of all your TV Shows. This app helps you discover Popular TV Series.
+This app helps user in keeping tracks of all your TV Shows.
 
 ## Features
 
