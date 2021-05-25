@@ -11,6 +11,9 @@ This app helps keeping tracks of all your TV Shows. This app helps you discover 
   - [x] Beautiful UI with Multiple Themes
   - [x] Powerful Search Engine
 
+## Download
+Get the app from [releases page](https://github.com/GouravShDev/Tv-Maze-App/releases).
+
 ## ScreenShots
 
 <p float="left">
