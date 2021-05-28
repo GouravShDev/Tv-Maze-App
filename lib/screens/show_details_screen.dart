@@ -195,8 +195,9 @@ class _ShowDetailsState extends State<ShowDetails> {
                                   fit: StackFit.expand,
                                   children: [
                                     FittedBox(
-                                      fit: BoxFit.fitWidth,
-                                      child: _getImage(_show.imageUrl),
+                                        fit: BoxFit.fitWidth,
+                                        clipBehavior: Clip.antiAlias,
+                                        child: _getImage(_show.imageUrl),
                                     ),
                                     ClipRRect(
                                       child: BackdropFilter(

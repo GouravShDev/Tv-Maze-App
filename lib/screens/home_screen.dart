@@ -62,9 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<Map<String, String>>> _getDataFromWeb(int page) async {
     List<int> noImageTitleIndex = [];
     http.Response response;
+    Uri uri = Uri.parse("https://www.tvmaze.com/shows?page=" + page.toString());
     try {
       response = await http
-          .get("https://www.tvmaze.com/shows?page=" + page.toString());
+          .get(uri);
     } on Exception catch (e) {
       print("ERROR : $e");
       setState(() {
